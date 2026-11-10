@@ -3,6 +3,9 @@ import { ProductModel } from './components/Model/ProductModel';
 import { BasketModel } from './components/Model/BasketModel';
 import { BuyerModel } from './components/Model/BuyerModel';
 import { apiProducts } from './utils/data';
+import { Api } from './components/base/Api';
+import { ApiShop } from './components/Api/ApiShop';
+import { API_URL } from './utils/constants';
 
 const productsModel = new ProductModel();
 productsModel.setItems(apiProducts.items);
@@ -42,5 +45,15 @@ buyerModel.clear();
 console.log('После очистки: ', buyerModel.getData());
 console.log('Ошибки после очистки: ', buyerModel.validate());
 
+const api = new Api(API_URL);
+const apiShop = new ApiShop(api);
 
 
+apiShop.getProducts()
+     .then((response) => {
+      productsModel.setItems(response.items);
+      console.log('Каталог с сервера: ', productsModel.getItems());
+     })
+     .catch((error) => {
+       console.error('Ошибка при получении товаров с сервера: ', error);
+     });

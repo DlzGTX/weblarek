@@ -30,4 +30,19 @@ export interface IBuyer {
     phone: string;
 }
 
+export interface IProductsResponse {
+  total: number;
+  items: IProduct[];
+}
+
+export interface IOrderRequest extends IBuyer {
+  total: number;
+  items: string[];
+}
+
+export interface IOrderResponse {
+  id: string;
+  total: number;
+}
+
 

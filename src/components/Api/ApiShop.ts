@@ -1,0 +1,17 @@
+import type { IApi, IProductsResponse, IOrderRequest, IOrderResponse } from '../../types';
+
+export class ApiShop {
+  private api: IApi;
+
+  constructor(api: IApi) {
+    this.api = api;
+  }
+
+  getProducts(): Promise<IProductsResponse> {
+    return this.api.get<IProductsResponse>("/product/");
+  }
+
+  postOrder(order: IOrderRequest): Promise<IOrderResponse> {
+    return this.api.post<IOrderResponse>("/order/", order);
+  }
+}

@@ -4,3 +4,30 @@ export interface IApi {
     get<T extends object>(uri: string): Promise<T>;
     post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
 }
+
+export type TProductCategory = 
+    'софт-скил' |
+    'хард-скил' |
+    'другое' |
+    'дополнительное' |
+    'кнопка';
+
+export interface IProduct { 
+    id: string;
+    title: string;
+    image: string;
+    category: string;
+    price: number | null;
+    description: string;
+}
+
+export type TPayment = 'card' | 'cash' | '';
+
+export interface IBuyer { 
+    payment: TPayment;
+    address: string;
+    email: string;
+    phone: string;
+}
+
+

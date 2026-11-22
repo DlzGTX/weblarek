@@ -29,21 +29,30 @@ modal.open();
 //test 2 
 import { cloneTemplate } from './utils/utils';
 import { CardCatalog } from './components/View/CardCatalog';
+//test 2
 
-const gallery = ensureElement<HTMLElement>('.gallery');
-const product = apiProducts.items[0];
+//test 3 
+import { CardPreview } from './components/View/CardPreview';
 
-const card = new CardCatalog(cloneTemplate<HTMLElement>('#card-catalog'), {
-  onClick: () => console.log('Клик по карточке: ', product.id),
+const previewProduct = apiProducts.items[2];
+
+const cardPreview = new CardPreview(cloneTemplate<HTMLElement>('#card-preview'), {
+  onClick: () => console.log('Клик по кнопке: ', previewProduct.id),
 });
 
-gallery.replaceChildren(card.render({
-  title: product.title,
-  price: product.price,
-  category: product.category,
-  image: product.image,
-}));
-//test 2
+modal.render({
+  content: cardPreview.render({
+    title: previewProduct.title,
+    price: previewProduct.price,
+    category: previewProduct.category,
+    image: previewProduct.image,
+    description: previewProduct.description,
+    buttonText: 'Удалить из корзины',
+    buttonDisabled: false,
+  }),
+});
+modal.open();
+//test 3
 const productsModel = new ProductModel();
 productsModel.setItems(apiProducts.items);
 console.log('Массив товаров из каталога: ', productsModel.getItems());

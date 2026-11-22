@@ -6,7 +6,7 @@ import { apiProducts } from './utils/data';
 import { Api } from './components/base/Api';
 import { ApiShop } from './components/Api/ApiShop';
 import { API_URL } from './utils/constants';
-
+// test1
 import { EventEmitter } from './components/base/Events';
 import { Header } from './components/View/Header';
 import { Modal } from './components/View/Modal';
@@ -24,7 +24,26 @@ const testContent = document.createElement('div');
 testContent.textContent = '5';
 modal.render({ content: testContent });
 modal.open();
+// test 1 
 
+//test 2 
+import { cloneTemplate } from './utils/utils';
+import { CardCatalog } from './components/View/CardCatalog';
+
+const gallery = ensureElement<HTMLElement>('.gallery');
+const product = apiProducts.items[0];
+
+const card = new CardCatalog(cloneTemplate<HTMLElement>('#card-catalog'), {
+  onClick: () => console.log('Клик по карточке: ', product.id),
+});
+
+gallery.replaceChildren(card.render({
+  title: product.title,
+  price: product.price,
+  category: product.category,
+  image: product.image,
+}));
+//test 2
 const productsModel = new ProductModel();
 productsModel.setItems(apiProducts.items);
 console.log('Массив товаров из каталога: ', productsModel.getItems());

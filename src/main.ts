@@ -34,19 +34,18 @@ import { CardCatalog } from './components/View/CardCatalog';
 //test 3 
 import { CardPreview } from './components/View/CardPreview';
 import { CardBasket } from './components/View/CardBasket';
-const basketProduct = apiProducts.items[0];
+import { Basket } from './components/View/Basket';
+const basket = new Basket(events, cloneTemplate<HTMLElement>('#basket'));
 
-const cardBasket = new CardBasket(cloneTemplate<HTMLElement>('#card-basket'), {
-  onClick: () => console.log('Удалить товар: ', basketProduct.id),
+const basketCards = apiProducts.items.slice(0, 2).map((item, i) => {
+  return new CardBasket(cloneTemplate<HTMLElement>('#card-basket'), {
+    onClick: () => console.log('Удалить: ', item.id),
+  }).render({ title: item.title, price: item.price, index: i+1 });
 });
 
-modal.render({
-  content: cardBasket.render({
-    title: basketProduct.title,
-    price: basketProduct.price,
-    index: 1,
-  }),
-});
+events.on('order:open', () => console.log('Нажали Оформить'));
+
+modal.render({ content: basket.render({ items: basketCards, total: 2200 }) });
 modal.open();
 //test 3
 const productsModel = new ProductModel();

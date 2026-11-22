@@ -33,22 +33,18 @@ import { CardCatalog } from './components/View/CardCatalog';
 
 //test 3 
 import { CardPreview } from './components/View/CardPreview';
+import { CardBasket } from './components/View/CardBasket';
+const basketProduct = apiProducts.items[0];
 
-const previewProduct = apiProducts.items[2];
-
-const cardPreview = new CardPreview(cloneTemplate<HTMLElement>('#card-preview'), {
-  onClick: () => console.log('Клик по кнопке: ', previewProduct.id),
+const cardBasket = new CardBasket(cloneTemplate<HTMLElement>('#card-basket'), {
+  onClick: () => console.log('Удалить товар: ', basketProduct.id),
 });
 
 modal.render({
-  content: cardPreview.render({
-    title: previewProduct.title,
-    price: previewProduct.price,
-    category: previewProduct.category,
-    image: previewProduct.image,
-    description: previewProduct.description,
-    buttonText: 'Удалить из корзины',
-    buttonDisabled: false,
+  content: cardBasket.render({
+    title: basketProduct.title,
+    price: basketProduct.price,
+    index: 1,
   }),
 });
 modal.open();

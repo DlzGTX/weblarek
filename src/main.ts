@@ -7,6 +7,24 @@ import { Api } from './components/base/Api';
 import { ApiShop } from './components/Api/ApiShop';
 import { API_URL } from './utils/constants';
 
+import { EventEmitter } from './components/base/Events';
+import { Header } from './components/View/Header';
+import { Modal } from './components/View/Modal';
+import { ensureElement } from './utils/utils';
+
+const events = new EventEmitter();
+const header = new Header(events, ensureElement<HTMLElement>('.header'));
+const modal = new Modal(events, ensureElement<HTMLElement>('#modal-container'));
+
+
+header.render({ counter: 3 });
+events.on('basket:open', () => console.log('Клик по корзине'));
+
+const testContent = document.createElement('div');
+testContent.textContent = '5';
+modal.render({ content: testContent });
+modal.open();
+
 const productsModel = new ProductModel();
 productsModel.setItems(apiProducts.items);
 console.log('Массив товаров из каталога: ', productsModel.getItems());

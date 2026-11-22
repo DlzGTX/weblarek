@@ -35,17 +35,17 @@ import { CardCatalog } from './components/View/CardCatalog';
 import { CardPreview } from './components/View/CardPreview';
 import { CardBasket } from './components/View/CardBasket';
 import { Basket } from './components/View/Basket';
-const basket = new Basket(events, cloneTemplate<HTMLElement>('#basket'));
+import { Form } from './components/View/Form';
+import { ContactsForm } from './components/View/ContactsForm';
+const contactsForm = new ContactsForm(events, cloneTemplate<HTMLFormElement>('#contacts'));
 
-const basketCards = apiProducts.items.slice(0, 2).map((item, i) => {
-  return new CardBasket(cloneTemplate<HTMLElement>('#card-basket'), {
-    onClick: () => console.log('Удалить: ', item.id),
-  }).render({ title: item.title, price: item.price, index: i+1 });
+events.on('contacts.email:change', (data) => console.log('email: ', data));
+events.on('contacts.phone:change', (data) => console.log('phone: ', data));
+events.on('contacts:submit', () => console.log('Отправили форму'));
+
+modal.render({
+  content: contactsForm.render({ valid: false, errors: 'Укажите email' }),
 });
-
-events.on('order:open', () => console.log('Нажали Оформить'));
-
-modal.render({ content: basket.render({ items: basketCards, total: 2200 }) });
 modal.open();
 //test 3
 const productsModel = new ProductModel();

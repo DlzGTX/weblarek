@@ -37,14 +37,15 @@ import { CardBasket } from './components/View/CardBasket';
 import { Basket } from './components/View/Basket';
 import { Form } from './components/View/Form';
 import { ContactsForm } from './components/View/ContactsForm';
-const contactsForm = new ContactsForm(events, cloneTemplate<HTMLFormElement>('#contacts'));
+import { OrderForm } from './components/View/OrderForm';
+const orderForm = new OrderForm(events, cloneTemplate<HTMLFormElement>('#order'));
 
-events.on('contacts.email:change', (data) => console.log('email: ', data));
-events.on('contacts.phone:change', (data) => console.log('phone: ', data));
-events.on('contacts:submit', () => console.log('Отправили форму'));
+events.on('order.payment:change', (data) => console.log('payment: ', data));
+events.on('order.address:change', (data) => console.log('address: ', data));
+events.on('order:submit', () => console.log('Далее'));
 
 modal.render({
-  content: contactsForm.render({ valid: false, errors: 'Укажите email' }),
+  content: orderForm.render({ valid: false, errors: 'Выберите способ оплаты', payment: 'card', address: '' }),
 });
 modal.open();
 //test 3

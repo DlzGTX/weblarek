@@ -21,6 +21,7 @@ import { IProduct, TPayment } from './types';
 import { Success } from './components/View/Success';
 
 const events = new EventEmitter();
+
 const productsModel = new ProductModel(events);
 const basketModel = new BasketModel(events);
 const buyerModel = new BuyerModel(events);
@@ -32,6 +33,9 @@ const basket = new Basket(events, cloneTemplate<HTMLElement>('#basket'));
 const orderForm = new OrderForm(events, cloneTemplate<HTMLFormElement>('#order'));
 const contactsForm = new ContactsForm(events, cloneTemplate<HTMLFormElement>('#contacts'));
 const success = new Success(events, cloneTemplate<HTMLElement>('#success'));
+const cardPreview = new CardPreview(cloneTemplate<HTMLElement>('#card-preview'), {
+  onClick: () => events.emit('preview:button'),
+});
 
 const api = new Api(API_URL);
 const apiShop = new ApiShop(api);
@@ -53,7 +57,7 @@ function getBasketData() {
 function renderOrderForm() {
   const { payment, address } = buyerModel.getData();
   const errors = buyerModel.validate();
-  return orderForm.render({
+  orderForm.render({
     payment,
     address,
     valid: !errors.payment && !errors.address,
@@ -64,7 +68,7 @@ function renderOrderForm() {
 function renderContactsForm() {
   const { email, phone } = buyerModel.getData();
   const errors = buyerModel.validate();
-  return contactsForm.render({
+  contactsForm.render({
     email,
     phone,
     valid: !errors.email && !errors.phone,
@@ -91,7 +95,9 @@ events.on('card:select', (item: IProduct) => {
   productsModel.setPreview(item);
 });
 
-events.on<IProduct>('preview:button', (item) => {
+events.on('preview:button', () => {
+  const item = productsModel.getPreview()
+  if (!item) return;
   if (basketModel.hasItem(item.id)) {
     basketModel.removeItem(item);
   } else {
@@ -99,12 +105,6 @@ events.on<IProduct>('preview:button', (item) => {
   }
   modal.close();
 });
-
-events.on('basket:changed', () => {
-  header.render({ counter: basketModel.getCount() });
-});
-
-
 
 events.on('preview:changed', () => {
   const item = productsModel.getPreview();
@@ -114,12 +114,8 @@ events.on('preview:changed', () => {
   const inBasket = basketModel.hasItem(item.id);
   const buttonText = noPrice ? 'Недоступно' : inBasket ? 'Удалить из корзины' : 'Купить';
 
-  const card = new CardPreview(cloneTemplate<HTMLElement>('#card-preview'), {
-    onClick: () => events.emit('preview:button', item),
-  });
-
   modal.render({
-    content: card.render({
+    content: cardPreview.render({
       title: item.title,
       price: item.price,
       category: item.category,
@@ -142,12 +138,12 @@ events.on('basket:changed', () => {
 });
 
 events.on('basket:open', () => {
-  modal.render({ content: basket.render(getBasketData()) });
+  modal.render({ content: basket.render() });
   modal.open();
 });
 
 events.on('order:open', () => {
-  modal.render({ content: renderOrderForm() });
+  modal.render({ content: orderForm.render() });
   modal.open();
 });
 
@@ -173,7 +169,7 @@ events.on('buyer:changed', () => {
 });
 
 events.on('order:submit', () => {
-  modal.render({ content: renderContactsForm() });
+  modal.render({ content: contactsForm.render() });
 });
 
 events.on('contacts:submit', () => {
